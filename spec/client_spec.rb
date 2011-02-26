@@ -35,4 +35,19 @@ describe Logglier::Client do
 
   end
 
+  context "#write" do
+    before do
+      @log = Logglier::Client.new('https://localhost')
+      @log.http.stub(:start)
+    end
+
+    context "with a message" do
+
+      it "should start a http call" do
+        @log.http.should_receive(:start)
+        @log.write('msg')
+      end
+
+    end
+  end
 end
