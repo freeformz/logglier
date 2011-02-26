@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version           = Logglier::VERSION
   s.date              = '2011-02-25'
   s.summary           = "Loggly 'plugin' for Logger"
-  s.desription        =<<EOD
+  s.description       =<<EOD
 Logger => Loggly
 EOD
 
