@@ -6,12 +6,15 @@ Gem::Specification.new do |s|
   s.version           = Logglier::VERSION
   s.date              = '2011-02-25'
   s.summary           = "Loggly 'plugin' for Logger"
+  s.desription        =<<EOD
+Logger => Loggly
+EOD
 
   s.authors           = ["Edward Muller (aka freeformz)"]
   s.email             = 
   s.homepage          = "http://loggly.com"
 
-  s.files             = Dir["#{dir}/lib/**/*.rb"]
+  s.files             = %w{ README.md Gemfile logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
   s.require_paths     = ["lib"]
   s.test_files        = Dir["#{dir}/spec/**/*.rb"]
 
