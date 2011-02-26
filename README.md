@@ -7,12 +7,20 @@ Posts Logger messages to Loggly using the HTTP API.
 Usage
 -----
 
-require 'logger'
 require 'logglier'
 
-log = Logger.new(Logglier.new(<INPUT URL>))
+log = Logglier.new(<INPUT URL>)
 
 log.info("hello from logglier")
+
+
+### With Rails
+
+config/environments/production.rb
+
+RailsApplication::Application.configure do
+  config.logger = Logglier.new(<INPUT URL>)
+end
 
 
 TODO
