@@ -1,4 +1,4 @@
-require 'net/http'
+require 'net/https'
 require 'uri'
 
 require 'pp'
@@ -9,28 +9,31 @@ module Logglier
 
   class Client
 
-    attr_reader :input_url
+    attr_reader :input_uri
 
     def initialize(opts={})
-      @input_url = opts.is_a?(String) ? opts : opts[:input_url]
+      @input_uri = opts.is_a?(String) ? opts : opts[:input_url]
 
       if opts.nil? or opts.empty?
         raise InputURLRequired.new
       end
 
       begin
-        @input_uri = URI.parse(@input_url)
+        @input_uri = URI.parse(@input_uri)
       rescue URI::InvalidURIError => e
-        raise InputURLRequired.new("Invalid Input URL: #{@input_url}")
+        raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
+      end
+
+      @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
+      if @input_uri.scheme == 'https'
+        @http.use_ssl = true
+        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
     end
 
     # Required by Logger::LogDevice
     def write(message)
-      request = Net::HTTP::Post.new(@input_uri.path)
-      request.body = message
-      response = Net::HTTP.start(@input_uri.host, @input_uri.port) {|http| http.request(request)}
-      pp resposnse
+      @http.start { @http.request_post(@input_uri.path, message) }
     end
 
     # Required by Logger::LogDevice
