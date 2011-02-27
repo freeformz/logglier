@@ -1,47 +1,47 @@
-require 'net/https'
-require 'uri'
-
 module Logglier
-  class Client
+  module Client
 
-    attr_reader :input_uri, :http
-
-    def initialize(opts={})
-      opts = { :input_url => opts } if opts.is_a?(String)
-      @input_uri = opts[:input_url]
-
+    def self.new(opts={})
       if opts.nil? or opts.empty?
         raise InputURLRequired.new
       end
+      
+      opts = { :input_url => opts } if opts.is_a?(String)
 
       begin
-        @input_uri = URI.parse(@input_uri)
+        input_uri = URI.parse(opts[:input_url])
       rescue URI::InvalidURIError => e
-        raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
+        raise InputURLRequired.new("Invalid Input URL: #{input_uri}")
       end
 
-      @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
-      if @input_uri.scheme == 'https'
-        @http.use_ssl = true
-        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      case input_uri.scheme
+      when 'http', 'https'
+        Logglier::Client::HTTP.new(opts)
+      when 'udp', 'tcp'
+        Logglier::Client::Syslog.new(opts)
+      else
+        raise Logglier::UnsupportedScheme.new("#{input_uri.scheme} is unsupported")
+      end
+      
+    end
+
+    module InstanceMethods
+
+      def setup_input_uri(opts)
+        @input_uri = opts[:input_url]
+
+        begin
+          @input_uri = URI.parse(@input_uri)
+        rescue URI::InvalidURIError => e
+          raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
+        end
       end
 
-      @http.read_timeout = opts[:read_timeout] || 2
-      @http.open_timeout = opts[:open_timeout] || 2
     end
 
-    # Required by Logger::LogDevice
-    def write(message)
-      begin
-        @http.start { @http.request_post(@input_uri.path, message) }
-      rescue TimeoutError => e
-        $stderr.puts "WARNING: TimeoutError posting message: #{message}"
-      end
-    end
-
-    # Required by Logger::LogDevice
-    def close
-      nil
-    end
   end
 end
+
+require File.join(File.dirname(__FILE__), 'client', 'http')
+require File.join(File.dirname(__FILE__), 'client', 'syslog')
+
