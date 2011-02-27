@@ -3,8 +3,9 @@ Overview
 
 Send logged messages to Loggly using either the HTTP API or Syslog/UDP.
 
-Can be used in place of Ruby's Logger <http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>
+Can be used in place of Ruby's Logger (<http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>)
 
+In fact, it (currently) returns an instance of Logger.
 
 Usage
 -----
