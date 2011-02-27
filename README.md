@@ -1,7 +1,9 @@
 Overview
 --------
 
-Posts Logger messages to Loggly using the HTTP API.
+Send logged messages to Loggly using either the HTTP API or Syslog/UDP.
+
+Can be used in place of Ruby's Logger <http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>
 
 
 Usage
@@ -36,7 +38,7 @@ The id is provided by loggly, look at the input's details page
     Logglier.new('udp://<hostname>:<port>/<facility>')
 
 The facility is optional and defaults to 16 (local0) if none is
-specified.
+specified. Facilities are just integers from 0 to 23, see <http://www.faqs.org/rfcs/rfc3164.html>
 
 
 TODO
