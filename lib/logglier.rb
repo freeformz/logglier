@@ -20,6 +20,8 @@ module Logglier
       logger.datetime_format = client.datetime_format
     end
 
+    $client = client
+
     logger
   end
 

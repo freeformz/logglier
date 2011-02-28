@@ -9,12 +9,19 @@ module Logglier
     class Syslog
       include Logglier::Client::InstanceMethods
 
-      attr_reader :input_uri, :facility
+      attr_reader :input_uri, :facility, :syslog
 
       def initialize(opts={})
         setup_input_uri(opts)
-        @syslog = UDPSocket.new()
-        @syslog.connect(@input_uri.host, @input_uri.port)
+
+        case @input_uri.scheme
+        when 'udp'
+          @syslog = UDPSocket.new()
+          @syslog.connect(@input_uri.host, @input_uri.port)
+        when 'tcp'
+          @syslog = TCPSocket.new(@input_uri.host, @input_uri.port)
+          @syslog.setsockopt( Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, 1 )
+        end
 
         unless @input_uri.path.empty?
           @facility = @input_uri.path.split('/')[1]
@@ -34,7 +41,13 @@ module Logglier
       def write(message)
         begin
           pp message
-          @syslog.send(message,0)
+          case @input_uri.scheme
+          when 'tcp'
+            @syslog.write(message)
+            @syslog.flush
+          when 'udp'
+            @syslog.send(message,0)
+          end
         rescue TimeoutError => e
           $stderr.puts "WARNING: TimeoutError posting message: #{message}"
         end
@@ -86,6 +99,10 @@ module Logglier
           else
             message << msg.inspect
           end
+          if @input_uri.scheme == 'tcp'
+            message << "\r\n"
+          end
+          message
         end
       end
 
