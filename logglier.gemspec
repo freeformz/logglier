@@ -14,7 +14,7 @@ EOD
   s.email             = 
   s.homepage          = "http://loggly.com"
 
-  s.files             = %w{ README.md Gemfile logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
+  s.files             = %w{ README.md Gemfile LICENSE logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
   s.require_paths     = ["lib"]
   s.test_files        = Dir["#{dir}/spec/**/*.rb"]
 
