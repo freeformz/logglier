@@ -33,14 +33,20 @@ Input URLs
     Logglier.new('https://logs.loggly.com/inputs/<id>')
 
 The id is provided by loggly, look at the input's details page
+To make sure the http client doesn't block too long read_timeout and
+open_timeout are set to 2 seconds by default. This can be overridden
+like so:
 
-### Syslog UDP Inputs
+    Logglier.new(:input_url => 'https://logs.loggle.com/inputs/<id>',
+                 :read_timeout => <#>,
+                 :open_timeout => <#> )
 
-    Logglier.new('udp://<hostname>:<port>/<facility>')
+### Syslog TCP/UDP Inputs
+
+    Logglier.new('[udp|tcp]://<hostname>:<port>/<facility>')
 
 The facility is optional and defaults to 16 (local0) if none is
 specified. Facilities are just integers from 0 to 23, see <http://www.faqs.org/rfcs/rfc3164.html>
-
 
 TODO
 -----
