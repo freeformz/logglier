@@ -48,11 +48,36 @@ like so:
 The facility is optional and defaults to 16 (local0) if none is
 specified. Facilities are just integers from 0 to 23, see <http://www.faqs.org/rfcs/rfc3164.html>
 
+
+Logging
+-------
+
+Logglier.new returns a ruby Logger object, so take a look at:
+
+http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/
+
+The Logger's logdev has some special format handling though.
+
+### Logging a string
+
+    log.warn "test"
+
+Will produce the following log message in Loggly:
+
+    "<Date> severity=WARN, test"
+
+### Logging a Hash
+
+    log.warn :boom => :box, :bar => :soap
+
+Will produce the following log message in Loggly:
+
+    "<Date> severity=WARN, boom=box, bar=soap"
+
+
 TODO
 -----
 
-* key=value Loggly stuff.
 * Alternative https implementations (Typheous, Excon, etc). May be
   faster?
-* Option to use Syslog TCP inputs. Possibly faster than the https inputs.
 * Do logging in a seperate thread. Is this useful? Too complex?
