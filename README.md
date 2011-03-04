@@ -74,6 +74,12 @@ Will produce the following log message in Loggly:
 
     "<Date> severity=WARN, boom=box, bar=soap"
 
+Bugs
+-----
+
+https://github.com/freeformz/logglier/issues
+
+Pull requests welcome
 
 TODO
 -----
