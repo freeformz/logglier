@@ -27,6 +27,20 @@ module Logglier
 
     module InstanceMethods
 
+      def massage_message(incoming_message, severity)
+        outgoing_message = ""
+        outgoing_message << "severity=#{severity}, "
+        case incoming_message
+        when Hash
+          outgoing_message << incoming_message.map { |v| "#{v[0]}=#{v[1]}" }.join(", ")
+        when String
+          outgoing_message << incoming_message
+        else
+          outgoing_message << incoming_message.inspect
+        end
+        outgoing_message
+      end
+
       def setup_input_uri(opts)
         @input_uri = opts[:input_url]
 

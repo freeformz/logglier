@@ -12,7 +12,7 @@ describe Logglier::Client do
 
     end
 
-    context "a single string param" do
+    context "with a single string param" do
 
       context "that is a valid http uri" do
 
@@ -32,6 +32,10 @@ describe Logglier::Client do
       end
 
       context "that is a valid tcp uri" do
+
+        before do
+          TCPSocket.stub(:new) { MockTCPSocket.new }
+        end
 
         it "should return an instance of the proper client" do
           log = Logglier::Client.new('tcp://logs.loggly.com:42538')
@@ -58,19 +62,40 @@ describe Logglier::Client do
 
   end
 
-  context "#write" do
-    before do
-      @log = Logglier::Client.new('https://localhost')
-      @log.http.stub(:start)
-    end
-
-    context "with a message" do
-
-      it "should start a http call" do
-        @log.http.should_receive(:start)
-        @log.write('msg')
+  context "HTTPS" do
+    context "#write" do
+      it "should post a message" do
+        log = Logglier::Client.new('https://localhost')
+        log.http.stub(:request_post)
+        log.http.should_receive(:request_post).with('','msg')
+        log.write('msg')
       end
-
     end
   end
+
+  context "Syslog" do
+    context "udp" do
+      context "#write" do
+        it "should send a message" do
+          log = Logglier::Client.new('udp://localhost:12345')
+          log.syslog.stub(:send)
+          log.syslog.should_receive(:send).with('msg',0)
+          log.write('msg')
+        end
+      end
+    end
+
+    context "tcp" do
+      context "#write" do
+        before { TCPSocket.stub(:new) { MockTCPSocket.new } }
+        it "should send a message" do
+          log = Logglier::Client.new('tcp://localhost:12345')
+          log.syslog.stub(:send)
+          log.syslog.should_receive(:send).with('msg',0)
+          log.write('msg')
+        end
+      end
+    end
+  end
+
 end

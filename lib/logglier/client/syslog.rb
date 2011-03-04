@@ -21,6 +21,7 @@ module Logglier
         when 'tcp'
           @syslog = TCPSocket.new(@input_uri.host, @input_uri.port)
           @syslog.setsockopt( Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, 1 )
+          @syslog.setsockopt( Socket::IPPROTO_TCP, Socket::TCP_NODELAY, true)
         end
 
         unless @input_uri.path.empty?
@@ -40,14 +41,7 @@ module Logglier
       # Required by Logger::LogDevice
       def write(message)
         begin
-          pp message
-          case @input_uri.scheme
-          when 'tcp'
-            @syslog.write(message)
-            @syslog.flush
-          when 'udp'
-            @syslog.send(message,0)
-          end
+          @syslog.send(message,0)
         rescue TimeoutError => e
           $stderr.puts "WARNING: TimeoutError posting message: #{message}"
         end
@@ -90,15 +84,7 @@ module Logglier
           else
             message << "#{$0}: "
           end
-          message << "severity=#{severity},"
-          case msg
-          when Hash
-            msg.inject(message) {|m,v| m << "#{v[0]}=#{v[1]}" }
-          when String
-            message << msg
-          else
-            message << msg.inspect
-          end
+          message << massage_message(msg,severity)
           if @input_uri.scheme == 'tcp'
             message << "\r\n"
           end

@@ -14,13 +14,9 @@ module Logglier
 
     if client.respond_to?(:formatter)
       logger.formatter = client.formatter
-    end
-
-    if client.respond_to?(:datetime_format)
+    elsif client.respond_to?(:datetime_format)
       logger.datetime_format = client.datetime_format
     end
-
-    $client = client
 
     logger
   end

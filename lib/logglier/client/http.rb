@@ -26,9 +26,16 @@ module Logglier
       # Required by Logger::LogDevice
       def write(message)
         begin
-          @http.start { @http.request_post(@input_uri.path, message) }
+          @http.request_post(@input_uri.path, message)
         rescue TimeoutError => e
           $stderr.puts "WARNING: TimeoutError posting message: #{message}"
+        end
+      end
+
+      def formatter
+        proc do |severity, datetime, progname, msg|
+          message = "#{datetime} "
+          message << massage_message(msg, severity)
         end
       end
 
