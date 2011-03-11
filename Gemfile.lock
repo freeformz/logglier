@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logglier (0.0.3)
+    logglier (0.0.5)
 
 GEM
   remote: http://rubygems.org/

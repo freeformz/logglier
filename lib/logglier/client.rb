@@ -27,12 +27,26 @@ module Logglier
 
     module InstanceMethods
 
+      def masherize_key(prefix,key)
+        [prefix,key.to_s].compact.join('.')
+      end
+
+      def masher(hash, prefix=nil)
+        hash.map do |v|
+          if v[1].is_a?(Hash)
+            masher(v[1],masherize_key(prefix,v[0]))
+          else
+            "#{masherize_key(prefix,v[0])}=#{v[1]}"
+          end
+        end.join(", ")
+      end
+
       def massage_message(incoming_message, severity)
         outgoing_message = ""
         outgoing_message << "severity=#{severity}, "
         case incoming_message
         when Hash
-          outgoing_message << incoming_message.map { |v| "#{v[0]}=#{v[1]}" }.join(", ")
+          outgoing_message << masher(incoming_message)
         when String
           outgoing_message << incoming_message
         else

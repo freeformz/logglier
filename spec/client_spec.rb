@@ -64,11 +64,30 @@ describe Logglier::Client do
 
   context "HTTPS" do
     context "#write" do
-      it "should post a message" do
-        log = Logglier::Client.new('https://localhost')
-        log.http.stub(:request_post)
-        log.http.should_receive(:request_post).with('','msg')
-        log.write('msg')
+      context "with a simple text message" do
+        it "should post a message" do
+          log = Logglier::Client.new('https://localhost')
+          log.http.stub(:request_post)
+          log.http.should_receive(:request_post).with('','msg')
+          log.write('msg')
+        end
+      end
+    end
+
+    context "message formatting methods" do
+      subject { Logglier::Client.new('https://localhost') }
+
+      it "should mash out hashes" do
+        subject.massage_message({:foo => :bar},"WARN").should == "severity=WARN, foo=bar"
+      end
+
+      it "should mash out nested hashes" do
+        subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN").should == "severity=WARN, foo=bar, bazzle.bom=bastic"
+      end
+
+      it "should mash out deeply nested hashes" do
+        subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN").should ==
+          "severity=WARN, foo=bar, bazzle.bom=bastic, bazzle.totally.freaking=funny"
       end
     end
   end
