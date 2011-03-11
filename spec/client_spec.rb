@@ -78,16 +78,33 @@ describe Logglier::Client do
       subject { Logglier::Client.new('https://localhost') }
 
       it "should mash out hashes" do
-        subject.massage_message({:foo => :bar},"WARN").should == "severity=WARN, foo=bar"
+        message = subject.massage_message({:foo => :bar},"WARN")
+        message.should =~ /^severity=WARN,/
+        message.should =~ /foo=bar/
       end
 
       it "should mash out nested hashes" do
-        subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN").should == "severity=WARN, foo=bar, bazzle.bom=bastic"
+        message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN")
+        message.should =~ /^severity=WARN,/
+        message.should =~ /foo=bar/
+        message.should =~ /bazzle\.bom=bastic/
       end
 
       it "should mash out deeply nested hashes" do
-        subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN").should ==
-          "severity=WARN, foo=bar, bazzle.bom=bastic, bazzle.totally.freaking=funny"
+        message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
+        message.should =~ /^severity=WARN,/
+        message.should =~ /foo=bar/
+        message.should =~ /bazzle\.bom=bastic/
+        message.should =~ /bazzle\.totally\.freaking=funny/
+      end
+
+      it "should mash out deeply nested hashes, with an array" do
+        message = subject.massage_message({:foo => :bar, :taste => ["this","sauce"], :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
+        message.should =~ /^severity=WARN,/
+        message.should =~ /foo=bar/
+        message.should =~ /taste=\["this", "sauce"\]/
+        message.should =~ /bazzle\.bom=bastic/
+        message.should =~ /bazzle\.totally\.freaking=funny/
       end
     end
   end

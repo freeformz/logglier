@@ -36,7 +36,12 @@ module Logglier
           if v[1].is_a?(Hash)
             masher(v[1],masherize_key(prefix,v[0]))
           else
-            "#{masherize_key(prefix,v[0])}=#{v[1]}"
+            "#{masherize_key(prefix,v[0])}=" << case v[1]
+            when Symbol
+              v[1].to_s
+            else
+              v[1].inspect
+            end
           end
         end.join(", ")
       end
