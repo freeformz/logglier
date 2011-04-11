@@ -4,7 +4,7 @@ require File.expand_path(File.join(dir, 'lib', 'logglier', 'version'))
 Gem::Specification.new do |s|
   s.name              = "logglier"
   s.version           = Logglier::VERSION
-  s.date              = '2011-02-25'
+  s.date              = Time.now
   s.summary           = "Loggly 'plugin' for Logger"
   s.description       =<<EOD
 Logger => Loggly
