@@ -7,7 +7,7 @@ describe Logglier::Client do
     context "w/o any params" do
 
       it "should raise an error" do
-        expect { Logglier::Client.new() }.to raise_error Logglier::InputURLRequired
+        expect { Logglier::Client.new() }.to raise_error ArgumentError
       end
 
     end
@@ -18,7 +18,7 @@ describe Logglier::Client do
 
         it "should return an instance of the proper client" do
           log = Logglier::Client.new('http://localhost')
-          log.should be_an_instance_of Logglier::Client::HTTP
+          log.should be_an_instance_of Logglier::Client::HTTP::Sync
         end
 
       end

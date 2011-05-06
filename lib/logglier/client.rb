@@ -1,12 +1,21 @@
 module Logglier
   module Client
 
-    def self.new(opts={})
-      if opts.nil? or opts.empty?
-        raise InputURLRequired.new
+    # Creates a new loggly client, based on a url scheme and options provided
+    # @param [Hash,String] opts the options hash or url string
+    # @option opts [String] :input_url The Loggly input_url
+    #
+    # If a url string is passed, it becomes {:input_url => <string>}
+    #
+    #
+    # @raise [Logglier::UnsupportedScheme] if the :input_url isn't recognized
+    # @return [Logglier::Client::HTTP, Logglier::Client::Syslog] returns an instance of the Logglier Client class 
+    def self.new(input_url, opts={})
+      unless input_url
+        raise URLRequired.new
       end
       
-      opts = { :input_url => opts } if opts.is_a?(String)
+      opts.merge!({ :input_url => input_url })
 
       begin
         input_uri = URI.parse(opts[:input_url])
@@ -46,6 +55,13 @@ module Logglier
         end.join(", ")
       end
 
+      def formatter
+        proc do |severity, datetime, progname, msg|
+          message = "#{datetime} "
+          message << massage_message(msg, severity)
+        end
+      end
+
       def massage_message(incoming_message, severity)
         outgoing_message = ""
         outgoing_message << "severity=#{severity}, "
@@ -66,7 +82,7 @@ module Logglier
         begin
           @input_uri = URI.parse(@input_uri)
         rescue URI::InvalidURIError => e
-          raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
+          raise URLRequired.new("Invalid Input URL: #{@input_uri}")
         end
       end
 

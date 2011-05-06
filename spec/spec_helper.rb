@@ -1,6 +1,6 @@
 $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
-require 'lib/logglier'
+require 'logglier'
 
 module LoggerHacks
   def logdev
@@ -21,8 +21,8 @@ RSpec.configure do |config|
     def send(*args); end
   end
 
-  def new_logglier(url)
-    log = Logglier.new(url)
+  def new_logglier(url,opts={})
+    log = Logglier.new(url,opts)
     log.extend(LoggerHacks)
   end
 
@@ -39,9 +39,13 @@ shared_examples_for "a logglier enhanced Logger instance" do
 
     context "with a hash" do
       it "should send a message via the logdev" do
-        subject.logdev.dev.should_receive(:write).with(/severity=WARN, foo=bar, man=pants/)
+        subject.logdev.dev.should_receive(:write).with(/severity=WARN/)
+        subject.logdev.dev.should_receive(:write).with(/foo=bar/)
+        subject.logdev.dev.should_receive(:write).with(/man=pants/)
         # The following is equiv to:
         # subject.warn :foo => :bar, :man => :pants
+        subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+        subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
         subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
       end
     end

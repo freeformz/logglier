@@ -8,8 +8,8 @@ module Logglier
   class UnsupportedScheme < ArgumentError; end
   class UnknownFacility < ArgumentError; end
 
-  def self.new(opts={})
-    client = Logglier::Client.new(opts)
+  def self.new(url, opts={})
+    client = Logglier::Client.new(url, opts)
     logger = Logger.new(client)
 
     if client.respond_to?(:formatter)

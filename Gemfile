@@ -1,3 +1,5 @@
 source :gemcutter
 
-gemspec 'logglier'
+gemspec
+
+gem "jruby-openssl", :platforms => :jruby
