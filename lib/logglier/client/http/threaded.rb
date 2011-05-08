@@ -34,8 +34,10 @@ module Logglier
           @exiting = false
 
           super do
-            until @exiting && @queue.empty?
-              deliver(@queue.pop)
+            loop do
+              msg = @queue.pop
+              break if msg == :__delivery_thread_exit_signal__
+              deliver(msg)
             end
           end
 
@@ -48,17 +50,15 @@ module Logglier
         # Signals the queue that we're exiting
         def exit!
           @exiting = true
-          @queue.push(:__delivery_thread_exit_signal__)
+          @queue.push :__delivery_thread_exit_signal__
         end
 
         # Delivers individual messages via http
         def deliver(message)
-          unless message == :__delivery_thread_exit_signal__
-            begin
-              @http.request_post(@input_uri.path, message)
-            rescue TimeoutError => e
-              $stderr.puts "WARNING: TimeoutError posting message: #{message}"
-            end
+          begin
+            @http.request_post(@input_uri.path, message)
+          rescue TimeoutError => e
+            $stderr.puts "WARNING: TimeoutError posting message: #{message}"
           end
         end
 
