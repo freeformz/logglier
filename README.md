@@ -3,7 +3,8 @@ Overview
 
 Send logged messages to Loggly using either the HTTP API or Syslog/UDP.
 
-Can be used in place of Ruby's Logger (<http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>)
+Can be used in place of Ruby's Logger
+(<http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>)
 
 In fact, it (currently) returns an instance of Logger.
 
@@ -32,21 +33,35 @@ Input URLs
 ### HTTP Inputs
     Logglier.new('https://logs.loggly.com/inputs/<id>')
 
-The id is provided by loggly, look at the input's details page
-To make sure the http client doesn't block too long read_timeout and
+The id is provided by loggly, look at the input's details page To make
+sure the http client doesn't block too long read_timeout and
 open_timeout are set to 2 seconds by default. This can be overridden
 like so:
 
-    Logglier.new(:input_url => 'https://logs.loggle.com/inputs/<id>',
+    Logglier.new('https://logs.loggly.com/inputs/<id>',
                  :read_timeout => <#>,
                  :open_timeout => <#> )
+
+#### Threaded Delivery
+
+Creating a new Logglier instance, pointed at a http input, with the
+`:threaded => true` option will tell Logglier to deliver log messages
+for that logger in a seperate thread. Each new Logglier instance gets
+it's own delivery thread and those threads are joined at exit to ensure
+log message delivery.
+
+Example:
+
+    Logglier.new('https://logs.loggly.com/inputs/<id>',
+                 :threaded => true)
 
 ### Syslog TCP/UDP Inputs
 
     Logglier.new('[udp|tcp]://<hostname>:<port>/<facility>')
 
 The facility is optional and defaults to 16 (local0) if none is
-specified. Facilities are just integers from 0 to 23, see <http://www.faqs.org/rfcs/rfc3164.html>
+specified. Facilities are just integers from 0 to 23, see
+<http://www.faqs.org/rfcs/rfc3164.html>
 
 
 Logging
@@ -86,4 +101,4 @@ TODO
 
 * Alternative https implementations (Typheous, Excon, etc). May be
   faster?
-* Do logging in a seperate thread. Is this useful? Too complex?
+* EM Integration?

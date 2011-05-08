@@ -1,6 +1,4 @@
-require 'singleton'
 require 'thread'
-require 'monitor'
 
 module Logglier
 
@@ -8,8 +6,17 @@ module Logglier
 
     module HTTP
 
+      # Used by the Threaded client to hold a queue, deliver messsages from it
+      # and to ensure it's flushed on program exit.
+      #
+      # Not meant to be used directly.
       class DeliveryThread < Thread
 
+        # @param [URI] input_uri The uri to deliver messags to
+        # @param [Integer] read_timeout Read timeout for the http session. defaults to 120
+        # @param [Integer] open_timeout Open timeout for the http session. defaults to 120
+        #
+        # @note registers an at_exit handler that signals exit intent and joins the thread.
         def initialize(input_uri, read_timeout=120, open_timeout=120)
 
           @input_uri = input_uri
@@ -33,16 +40,18 @@ module Logglier
           end
 
           at_exit {
-            flush!
+            exit!
             join
           }
         end
 
-        def flush!
+        # Signals the queue that we're exiting
+        def exit!
           @exiting = true
           @queue.push(:__delivery_thread_exit_signal__)
         end
 
+        # Delivers individual messages via http
         def deliver(message)
           unless message == :__delivery_thread_exit_signal__
             begin
@@ -53,11 +62,13 @@ module Logglier
           end
         end
 
+        # Pushes a message onto the internal queue
         def push(message)
           @queue.push(message)
         end
       end
 
+      # Interface to the DeliveryThread
       class Threaded
         include Logglier::Client::InstanceMethods
 
@@ -69,6 +80,9 @@ module Logglier
         end
 
         # Required by Logger::LogDevice
+        # @param [String] message the message to deliver
+        #
+        # @note doesn't do actual deliver. Pushes the messages off to the delivery thread
         def write(message)
           @delivery_thread.push(message)
         end
