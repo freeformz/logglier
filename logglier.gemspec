@@ -11,8 +11,8 @@ Logger => Loggly
 EOD
 
   s.authors           = ["Edward Muller (aka freeformz)"]
-  s.email             = 
-  s.homepage          = "http://loggly.com"
+  s.email             = "edwardam@interlix.com"
+  s.homepage          = "http://icanhazdowntime.org"
 
   s.files             = %w{ README.md Gemfile LICENSE logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
   s.require_paths     = ["lib"]
