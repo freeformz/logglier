@@ -13,6 +13,37 @@ module Logglier
         end
       end
 
+      module InstanceMethods
+
+        # Sets up @http 
+        #
+        # @param [Hash] opts The options Hash
+        # @option opts [String] :read_timeout The read timeout for the http connection
+        # @option opts [String] :open_timeout The open timeout for the http connection
+        def setup_http(opts={})
+          @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
+          if @input_uri.scheme == 'https'
+            @http.use_ssl = true
+            @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          end
+
+          @http.read_timeout = opts[:read_timeout] || 2
+          @http.open_timeout = opts[:open_timeout] || 2
+        end
+
+        # Delivers the message via HTTP, handling errors
+        #
+        # @param [String] message The message to deliver
+        def deliver(message)
+          begin
+            @http.request_post(@input_uri.path, message)
+          rescue TimeoutError, OpenSSL::SSL::SSLError, EOFError, Errno::ECONNRESET => e
+            $stderr.puts "WARNING: #{e.class} posting message: #{message}"
+          end
+        end
+
+      end
+
     end
   end
 end

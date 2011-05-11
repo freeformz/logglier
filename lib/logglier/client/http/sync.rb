@@ -6,29 +6,19 @@ module Logglier
 
       class Sync
         include Logglier::Client::InstanceMethods
+        include Logglier::Client::HTTP::InstanceMethods
 
         attr_reader :input_uri, :http
 
         def initialize(opts={})
           setup_input_uri(opts)
 
-          @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
-          if @input_uri.scheme == 'https'
-            @http.use_ssl = true
-            @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          end
-
-          @http.read_timeout = opts[:read_timeout] || 2
-          @http.open_timeout = opts[:open_timeout] || 2
+          setup_http(opts)
         end
 
         # Required by Logger::LogDevice
         def write(message)
-          begin
-            @http.request_post(@input_uri.path, message)
-          rescue TimeoutError => e
-            $stderr.puts "WARNING: TimeoutError posting message: #{message}"
-          end
+          deliver(message)
         end
 
         # Required by Logger::LogDevice
