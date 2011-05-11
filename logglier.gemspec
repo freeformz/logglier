@@ -12,7 +12,7 @@ EOD
 
   s.authors           = ["Edward Muller (aka freeformz)"]
   s.email             = "edwardam@interlix.com"
-  s.homepage          = "http://icanhazdowntime.org"
+  s.homepage          = "http://github.com/freeformz/logglier"
 
   s.files             = %w{ README.md Gemfile LICENSE logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
   s.require_paths     = ["lib"]
