@@ -30,6 +30,9 @@ module Logglier
             @http.ca_file = opts[:ca_file] if opts[:ca_file]
           end
 
+          # We prefer persistent HTTP connections, so workaround http://redmine.ruby-lang.org/issues/4522
+          @http.start
+
           @http.read_timeout = opts[:read_timeout] || 2
           @http.open_timeout = opts[:open_timeout] || 2
         end
