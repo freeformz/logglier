@@ -15,17 +15,23 @@ module Logglier
 
       module InstanceMethods
 
-        # Sets up @http 
+        # Sets up @http
         #
         # @param [Hash] opts The options Hash
-        # @option opts [String] :read_timeout The read timeout for the http connection
-        # @option opts [String] :open_timeout The open timeout for the http connection
+        # @option opts [Fixnum] :read_timeout The read timeout for the http connection
+        # @option opts [Fixnum] :open_timeout The open timeout for the http connection
+        # @option opts [Fixnum] :verify_mode OpenSSL::SSL::VERIFY_NONE or OpenSSL::SSL::VERIFY_PEER (default)
+        # @option opts [String] :ca_file Path of a CA certification file in PEM format
         def setup_http(opts={})
           @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
           if @input_uri.scheme == 'https'
             @http.use_ssl = true
-            @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            @http.verify_mode = opts[:verify_mode] || OpenSSL::SSL::VERIFY_PEER
+            @http.ca_file = opts[:ca_file] if opts[:ca_file]
           end
+
+          # We prefer persistent HTTP connections, so workaround http://redmine.ruby-lang.org/issues/4522
+          @http.start
 
           @http.read_timeout = opts[:read_timeout] || 2
           @http.open_timeout = opts[:open_timeout] || 2
