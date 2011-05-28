@@ -11,7 +11,6 @@ module Logglier
       #
       # Not meant to be used directly.
       class DeliveryThread < Thread
-        include Logglier::Client::HTTP::InstanceMethods
 
         # @param [URI] input_uri The uri to deliver messags to
         # @param [Integer] read_timeout Read timeout for the http session. defaults to 120
@@ -22,7 +21,7 @@ module Logglier
 
           @input_uri = input_uri
 
-          setup_http( {:read_timeout => read_timeout, :open_timeout => open_timeout} )
+          @http = NetHTTPProxy.new(@input_uri, {:read_timeout => read_timeout, :open_timeout => open_timeout} )
 
           @queue = Queue.new
           @exiting = false
@@ -31,7 +30,7 @@ module Logglier
             loop do
               msg = @queue.pop
               break if msg == :__delivery_thread_exit_signal__
-              deliver(msg)
+              @http.deliver(msg)
             end
           end
 

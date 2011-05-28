@@ -1,4 +1,9 @@
+require 'spec_helper'
+
 describe Logglier do
+  before do
+    Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { MockNetHTTPProxy.new }
+  end
 
   context "HTTPS" do
 

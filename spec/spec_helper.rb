@@ -21,6 +21,11 @@ RSpec.configure do |config|
     def send(*args); end
   end
 
+  class MockNetHTTPProxy
+    def initialize(*args); end
+    def deliver(*args); end
+  end
+
   def new_logglier(url,opts={})
     log = Logglier.new(url,opts)
     log.extend(LoggerHacks)

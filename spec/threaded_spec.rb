@@ -1,4 +1,10 @@
+require 'spec_helper'
+
 describe Logglier::Client::HTTP::DeliveryThread do
+  before do
+    @mock_http = MockNetHTTPProxy.new
+    Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { @mock_http }
+  end
 
   subject { described_class.new(URI.parse('http://localhost')) }
 
@@ -7,7 +13,7 @@ describe Logglier::Client::HTTP::DeliveryThread do
   end
 
   it "should" do
-    subject.should_receive(:deliver).with("test")
+    @mock_http.should_receive(:deliver).with("test")
     subject.push('test')
 
     #Signal the thread it's going to exit

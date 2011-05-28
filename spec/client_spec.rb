@@ -16,6 +16,10 @@ describe Logglier::Client do
 
       context "that is a valid http uri" do
 
+        before do
+          Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { MockNetHTTPProxy.new }
+        end
+
         it "should return an instance of the proper client" do
           log = Logglier::Client.new('http://localhost')
           log.should be_an_instance_of Logglier::Client::HTTP::Sync
@@ -62,51 +66,77 @@ describe Logglier::Client do
 
   end
 
+  context "message formatting methods" do
+
+    before do
+      Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { MockNetHTTPProxy.new }
+    end
+
+    subject { Logglier::Client.new('https://localhost') }
+
+    it "should mash out hashes" do
+      message = subject.massage_message({:foo => :bar},"WARN")
+      message.should =~ /^severity=WARN,/
+      message.should =~ /foo=bar/
+    end
+
+    it "should mash out nested hashes" do
+      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN")
+      message.should =~ /^severity=WARN,/
+      message.should =~ /foo=bar/
+      message.should =~ /bazzle\.bom=bastic/
+    end
+
+    it "should mash out deeply nested hashes" do
+      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
+      message.should =~ /^severity=WARN,/
+      message.should =~ /foo=bar/
+      message.should =~ /bazzle\.bom=bastic/
+      message.should =~ /bazzle\.totally\.freaking=funny/
+    end
+
+    it "should mash out deeply nested hashes, with an array" do
+      message = subject.massage_message({:foo => :bar, :taste => ["this","sauce"], :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
+      message.should =~ /^severity=WARN,/
+      message.should =~ /foo=bar/
+      message.should =~ /taste=\["this", "sauce"\]/
+      message.should =~ /bazzle\.bom=bastic/
+      message.should =~ /bazzle\.totally\.freaking=funny/
+    end
+  end
+
   context "HTTPS" do
-    context "#write" do
-      context "with a simple text message" do
-        it "should post a message" do
-          log = Logglier::Client.new('https://localhost')
-          log.http.stub(:request_post)
-          log.http.should_receive(:request_post).with('','msg')
-          log.write('msg')
+
+    before do
+      @mock_http = MockNetHTTPProxy.new
+      Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { @mock_http }
+    end
+
+    context "Sync" do
+      context "#write" do
+        context "with a simple text message" do
+          it "should deliver a message" do
+            log = Logglier::Client.new('https://localhost')
+            @mock_http.should_receive(:deliver).with('msg')
+            log.write('msg')
+          end
         end
       end
     end
 
-    context "message formatting methods" do
-      subject { Logglier::Client.new('https://localhost') }
-
-      it "should mash out hashes" do
-        message = subject.massage_message({:foo => :bar},"WARN")
-        message.should =~ /^severity=WARN,/
-        message.should =~ /foo=bar/
-      end
-
-      it "should mash out nested hashes" do
-        message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN")
-        message.should =~ /^severity=WARN,/
-        message.should =~ /foo=bar/
-        message.should =~ /bazzle\.bom=bastic/
-      end
-
-      it "should mash out deeply nested hashes" do
-        message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
-        message.should =~ /^severity=WARN,/
-        message.should =~ /foo=bar/
-        message.should =~ /bazzle\.bom=bastic/
-        message.should =~ /bazzle\.totally\.freaking=funny/
-      end
-
-      it "should mash out deeply nested hashes, with an array" do
-        message = subject.massage_message({:foo => :bar, :taste => ["this","sauce"], :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN")
-        message.should =~ /^severity=WARN,/
-        message.should =~ /foo=bar/
-        message.should =~ /taste=\["this", "sauce"\]/
-        message.should =~ /bazzle\.bom=bastic/
-        message.should =~ /bazzle\.totally\.freaking=funny/
+    context "Threaded" do
+      context "#write" do
+        context "with a simple text message" do
+          it "should deliver a message" do
+            log = Logglier::Client.new('https://localhost', :threaded => true)
+            @mock_http.should_receive(:deliver).with('msg')
+            log.write('msg')
+            sleep 5
+          end
+        end
       end
     end
+
   end
 
   context "Syslog" do
