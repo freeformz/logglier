@@ -12,7 +12,7 @@ module Logglier
       # Not meant to be used directly.
       class DeliveryThread < Thread
 
-        # @param [URI] input_uri The uri to deliver messags to
+        # @param [URI] input_uri The uri to deliver messages to
         # @param [Integer] read_timeout Read timeout for the http session. defaults to 120
         # @param [Integer] open_timeout Open timeout for the http session. defaults to 120
         #
