@@ -22,7 +22,7 @@ describe Logglier::Client do
 
         it "should return an instance of the proper client" do
           log = Logglier::Client.new('http://localhost')
-          log.should be_an_instance_of Logglier::Client::HTTP::Sync
+          log.should be_an_instance_of Logglier::Client::HTTP
         end
 
       end

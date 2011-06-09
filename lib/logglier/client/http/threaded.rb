@@ -1,27 +1,31 @@
 require 'thread'
 
 module Logglier
-
   module Client
-
-    module HTTP
+    class HTTP
 
       # Used by the Threaded client to hold a queue, deliver messsages from it
       # and to ensure it's flushed on program exit.
       #
-      # Not meant to be used directly.
+      # @note Uses NetHTTPProxy
+      #
       class DeliveryThread < Thread
 
-        # @param [URI] input_uri The uri to deliver messags to
-        # @param [Integer] read_timeout Read timeout for the http session. defaults to 120
-        # @param [Integer] open_timeout Open timeout for the http session. defaults to 120
+        # @param [URI] input_uri The uri to deliver messages to
+        # @param [Hash] opts Option hash
+        # @option [Integer] read_timeout Read timeout for the http session. defaults to 120
+        # @option [Integer] open_timeout Open timeout for the http session. defaults to 120
         #
+        # @note See NetHTTPProxy for further option processing of opts
         # @note registers an at_exit handler that signals exit intent and joins the thread.
-        def initialize(input_uri, read_timeout=120, open_timeout=120)
+        def initialize(input_uri, opts={})
 
           @input_uri = input_uri
 
-          @http = NetHTTPProxy.new(@input_uri, {:read_timeout => read_timeout, :open_timeout => open_timeout} )
+          opts[:read_timeout] = opts[:read_timeout] || 120
+          opts[:open_timeout] = opts[:open_timeout] || 120
+
+          @http = Logglier::Client::HTTP::NetHTTPProxy.new(@input_uri, opts)
 
           @queue = Queue.new
           @exiting = false
@@ -47,36 +51,11 @@ module Logglier
         end
 
         # Pushes a message onto the internal queue
-        def push(message)
+        def deliver(message)
           @queue.push(message)
         end
       end
 
-      # Interface to the DeliveryThread
-      class Threaded
-        include Logglier::Client::InstanceMethods
-
-        attr_reader :input_uri, :delivery_thread
-
-        def initialize(opts={})
-          setup_input_uri(opts)
-          @delivery_thread = DeliveryThread.new(@input_uri, opts[:read_timeout] || 120, opts[:open_timeout] || 120)
-        end
-
-        # Required by Logger::LogDevice
-        # @param [String] message the message to deliver
-        #
-        # @note doesn't do actual deliver. Pushes the messages off to the delivery thread
-        def write(message)
-          @delivery_thread.push(message)
-        end
-
-        # Required by Logger::LogDevice
-        def close
-          nil
-        end
-
-      end
     end
   end
 end

@@ -1,30 +1,46 @@
 module Logglier
-
   module Client
+    class HTTP
 
-    module HTTP
+      # Used to wrap and setup Net::HTTP as we need it
+      class NetHTTPProxy
 
-      class Sync
-        include Logglier::Client::InstanceMethods
+        # @param [URI] input_uri URI to deliver messages to
+        # @param [Hash] opts Option hash
+        # @option [Integer] read_timeout Read timeout for the http session. defaults to 2
+        # @option [Integer] open_timeout Open timeout for the http session. defaults to 2
+        # @option [Integer] verify_mode OpenSSL::SSL::VERIFY_* constant
+        # @option [String] ca_file Path to the ca file
+        def initialize(input_uri, opts={})
+          @input_uri = input_uri
 
-        attr_reader :input_uri, :http
+          @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
 
-        def initialize(opts={})
-          setup_input_uri(opts)
-          @http = NetHTTPProxy.new(@input_uri,opts)
+          if @input_uri.scheme == 'https'
+            @http.use_ssl = true
+            @http.verify_mode = opts[:verify_mode] || OpenSSL::SSL::VERIFY_PEER
+            @http.ca_file = opts[:ca_file] if opts[:ca_file]
+          end
+
+          # We prefer persistent HTTP connections, so workaround http://redmine.ruby-lang.org/issues/4522
+          @http.start
+
+          @http.read_timeout = opts[:read_timeout] || 2
+          @http.open_timeout = opts[:open_timeout] || 2
         end
 
-        # Required by Logger::LogDevice
-        def write(message)
-          @http.deliver(message)
+        # Delivers the message via HTTP, handling errors
+        #
+        # @param [String] message The message to deliver
+        def deliver(message)
+          begin
+            @http.request_post(@input_uri.path, message)
+          rescue TimeoutError, OpenSSL::SSL::SSLError, EOFError, Errno::ECONNRESET => e
+            $stderr.puts "WARNING: #{e.class} posting message: #{message}"
+          end
         end
-
-        # Required by Logger::LogDevice
-        def close
-          nil
-        end
-
       end
+
     end
   end
 end

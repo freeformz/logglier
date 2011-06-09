@@ -11,7 +11,7 @@ describe Logglier do
       subject { new_logglier('https://localhost') }
 
       it { should be_an_instance_of Logger }
-      its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP::Sync }
+      its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP }
 
       it_should_behave_like "a logglier enhanced Logger instance"
     end
@@ -20,7 +20,7 @@ describe Logglier do
       subject { new_logglier('https://localhost', :threaded => true) }
 
       it { should be_an_instance_of Logger }
-      its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP::Threaded }
+      its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP }
 
       it_should_behave_like "a logglier enhanced Logger instance"
     end

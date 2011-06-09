@@ -8,13 +8,9 @@ describe Logglier::Client::HTTP::DeliveryThread do
 
   subject { described_class.new(URI.parse('http://localhost')) }
 
-  before do
-    subject.stub(:deliver)
-  end
-
-  it "should" do
+  it "should deliver the message" do
     @mock_http.should_receive(:deliver).with("test")
-    subject.push('test')
+    subject.deliver('test')
 
     #Signal the thread it's going to exit
     subject.exit!
