@@ -33,8 +33,18 @@ module Logglier
         #
         # @param [String] message The message to deliver
         def deliver(message)
+          retried = false
           begin
             @http.request_post(@input_uri.path, message)
+          # We're using persistent connections, so connection can be closed by the other side
+          # after a timeout. Don't consider it an error, just retry once.
+          rescue Errno::ECONNRESET
+            unless retried
+              retried = true
+              retry
+            else
+              $stderr.puts "WARNING: connection was reset while posting message: #{message}"
+            end
           rescue TimeoutError, OpenSSL::SSL::SSLError, EOFError, Errno::ECONNRESET => e
             $stderr.puts "WARNING: #{e.class} posting message: #{message}"
           end
