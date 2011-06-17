@@ -1,5 +1,12 @@
-source :gemcutter
+source 'http://rubygems.org'
 
 gemspec
 
-gem "jruby-openssl", :platforms => :jruby
+platforms :jruby do
+  gem 'jruby-openssl'
+  gem 'json'
+end
+
+platforms :mri_18 do
+  gem 'json'
+end
