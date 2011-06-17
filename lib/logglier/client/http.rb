@@ -1,4 +1,3 @@
-require 'net/https'
 require 'uri'
 
 require File.join(File.dirname(__FILE__), 'http', 'sync')
@@ -13,6 +12,7 @@ module Logglier
 
       def initialize(opts={})
         setup_input_uri(opts)
+        @format = opts[:format].to_sym
         @deliverer = if opts[:threaded]
           Logglier::Client::HTTP::DeliveryThread.new(@input_uri, opts)
         else

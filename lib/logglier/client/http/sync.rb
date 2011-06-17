@@ -1,3 +1,5 @@
+require 'net/https'
+
 module Logglier
   module Client
     class HTTP

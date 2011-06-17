@@ -20,8 +20,12 @@ describe 'HTTP' do
     @http.should_receive(:request_post).exactly(2).times.and_raise Errno::ECONNRESET
     @proxy.deliver('message')
   end
+
   it "fails for other errors" do
     @http.should_receive(:request_post).once.and_raise EOFError
     @proxy.deliver('message')
+  end
+
+  describe "json format" do
   end
 end
