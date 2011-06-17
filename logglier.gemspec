@@ -1,4 +1,5 @@
-require File.expand_path(File.join(File.dirname(__FILE__), 'lib', 'logglier', 'version'))
+dir = File.dirname(__FILE__)
+require File.expand_path(File.join(dir, 'lib', 'logglier', 'version'))
 
 Gem::Specification.new do |s|
   s.name              = 'logglier'
