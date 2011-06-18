@@ -10,3 +10,7 @@ end
 platforms :mri_18 do
   gem 'json'
 end
+
+platforms :rbx do
+  gem 'json'
+end
