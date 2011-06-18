@@ -12,7 +12,7 @@ module Logglier
 
       def initialize(opts={})
         setup_input_uri(opts)
-        @format = opts[:format].to_sym
+        @format = opts[:format] ? opts[:formt].to_sym : nil
         @deliverer = if opts[:threaded]
           Logglier::Client::HTTP::DeliveryThread.new(@input_uri, opts)
         else
