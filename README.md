@@ -55,6 +55,17 @@ Example:
     Logglier.new('https://logs.loggly.com/inputs/<id>',
                  :threaded => true)
 
+#### JSON Formatting
+
+add the ':format => :json' when creating a new Logglier instance. Make
+sure to use a HTTP input that has JSON enabled. Can also be used with
+threaded delivery.
+
+Example:
+
+    Logglier.new('https://logs.loggly.com/inputs/<id>',
+                 :format => :json)
+
 ### Syslog TCP/UDP Inputs
 
     Logglier.new('[udp|tcp]://<hostname>:<port>/<facility>')
@@ -62,7 +73,6 @@ Example:
 The facility is optional and defaults to 16 (local0) if none is
 specified. Facilities are just integers from 0 to 23, see
 <http://www.faqs.org/rfcs/rfc3164.html>
-
 
 Logging
 -------
