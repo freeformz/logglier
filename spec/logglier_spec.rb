@@ -25,6 +25,15 @@ describe Logglier do
       it_should_behave_like "a logglier enhanced Logger instance"
     end
 
+    context "formatting" do
+      subject { new_logglier('https://localhost', :format => :json) }
+ 
+      it { should be_an_instance_of Logger }
+
+      it_should_behave_like "a logglier enhanced Logger instance"
+
+    end
+
   end
 
   context "Syslog TCP" do
