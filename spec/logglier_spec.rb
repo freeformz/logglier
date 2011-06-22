@@ -30,7 +30,25 @@ describe Logglier do
  
       it { should be_an_instance_of Logger }
 
-      it_should_behave_like "a logglier enhanced Logger instance"
+      context "with a string" do
+        it "should send a message via the logdev" do
+          subject.logdev.dev.should_receive(:write).with(/severity=WARN, foo/)
+          subject.add(Logger::WARN) { 'foo' }
+        end
+      end
+
+      context "with a hash" do
+        it "should send a message via the logdev" do
+          subject.logdev.dev.should_receive(:write).with(/"severity":"WARN"/)
+          subject.logdev.dev.should_receive(:write).with(/"foo":"bar"/)
+          subject.logdev.dev.should_receive(:write).with(/"man":"pants"/)
+          # The following is equiv to:
+          # subject.warn :foo => :bar, :man => :pants
+          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+        end
+      end
 
     end
 
