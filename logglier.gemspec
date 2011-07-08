@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'logglier'
 
-  s.required_ruby_version     = '>= 1.8.6'
+  s.required_ruby_version     = '>= 1.8.7'
   s.required_rubygems_version = '>= 1.3.6'
 
   s.add_development_dependency 'rake'
