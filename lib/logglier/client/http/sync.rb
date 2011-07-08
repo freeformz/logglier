@@ -57,7 +57,8 @@ module Logglier
           end
 
           # We prefer persistent HTTP connections, so workaround http://redmine.ruby-lang.org/issues/4522
-          @http.start
+          # This causes problems with 1.8.6, so don't do it there.
+          @http.start unless RUBY_VERSION == "1.8.6"
 
           @http.read_timeout = @read_timeout
           @http.open_timeout = @open_timeout
