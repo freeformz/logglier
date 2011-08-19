@@ -16,7 +16,7 @@ module Logglier
       unless input_url
         raise URLRequired.new
       end
-      
+
       opts.merge!({ :input_url => input_url })
 
       begin
@@ -33,7 +33,7 @@ module Logglier
       else
         raise Logglier::UnsupportedScheme.new("#{input_uri.scheme} is unsupported")
       end
-      
+
     end
 
     module InstanceMethods

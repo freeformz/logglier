@@ -19,6 +19,11 @@ module Logglier
           @ca_file = opts[:ca_file]
           @read_timeout = opts[:read_timeout] || 5
           @open_timeout = opts[:open_timeout] || 5
+          @format = opts[:format] ? opts[:format].to_sym : nil
+          @headers = {}
+          if @format == :json
+            @headers['Content-Type'] = 'application/json'
+          end
 
           connect!
         end
@@ -29,7 +34,7 @@ module Logglier
         def deliver(message)
           retried = false
           begin
-            @http.request_post(@input_uri.path, message)
+            @http.request_post(@input_uri.path, message, @headers)
           # We're using persistent connections, so connection can be closed by the other side
           # after a timeout. Don't consider it an error, just retry once.
           rescue Errno::ECONNRESET
