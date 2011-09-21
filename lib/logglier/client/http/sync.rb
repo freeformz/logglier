@@ -84,11 +84,15 @@ module Logglier
         end
 
         def failsafe_retrying(exception, message, retries)
-          @failsafe.puts "WARNING: [#{retries}/#{RETRIES}] caught `#{exception.class}: #{exception.message}`  while attempting to deliver: #{message}"
+          @failsafe.puts "WARNING: [#{retries}/#{RETRIES}] " + failsafe_message(exception, message)
         end
 
         def failsafe_errored(exception, message)
-          @failsafe.puts "ERROR: caught `#{exception.class}: #{exception.message}` while attempting to deliver: #{message}"
+          @failsafe.puts "ERROR: " + failsafe_message(exception, message)
+        end
+
+        def failsafe_message(exception, message)
+          "caught `#{exception.class}: #{exception.message}` while attempting to deliver: #{message}"
         end
       end
 
