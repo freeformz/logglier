@@ -1,6 +1,7 @@
 $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'logglier'
+require 'stringio'
 
 module LoggerHacks
   def logdev
