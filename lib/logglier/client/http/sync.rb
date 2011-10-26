@@ -71,7 +71,7 @@ module Logglier
           if @input_uri.scheme == 'https'
             @http.use_ssl = true
             @http.verify_mode = @verify_mode
-            @http.ca_file = @ca_file
+            @http.ca_file = @ca_file if @ca_file
           end
 
           # We prefer persistent HTTP connections, so workaround http://redmine.ruby-lang.org/issues/4522
