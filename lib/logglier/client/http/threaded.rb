@@ -4,7 +4,29 @@ module Logglier
   module Client
     class HTTP
 
-      # Used by the Threaded client to hold a queue, deliver messsages from it
+      # Used by the Threaded client to manage the delivery thread
+      # recreating it if is lost due to a fork.
+      #
+      class DeliveryThreadManager
+        def initialize(input_uri, opts={})
+          @input_uri, @opts = input_uri, opts
+          start_thread
+        end
+
+        # Pushes a message onto the internal queue
+        def deliver(message)
+          start_thread unless @thread.alive?
+          @thread.deliver(message)
+        end
+
+        private
+
+        def start_thread
+          @thread = DeliveryThread.new(@input_uri, @opts)
+        end
+      end
+
+      # Used by the DeliveryThreadManager to hold a queue, deliver messsages from it
       # and to ensure it's flushed on program exit.
       #
       # @note Uses NetHTTPProxy
@@ -19,7 +41,6 @@ module Logglier
         # @note See NetHTTPProxy for further option processing of opts
         # @note registers an at_exit handler that signals exit intent and joins the thread.
         def initialize(input_uri, opts={})
-
           @input_uri = input_uri
 
           opts[:read_timeout] = opts[:read_timeout] || 120
