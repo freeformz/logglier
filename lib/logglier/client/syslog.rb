@@ -60,7 +60,7 @@ module Logglier
       # Syslog specific PRI calculation.
       # See RFC3164 4.1.1
       def pri(severity)
-        @facility + case severity
+        severity_value = case severity
         when "FATAL"
           0
         when "ERROR"
@@ -72,6 +72,7 @@ module Logglier
         when "DEBUG"
           7
         end
+        (@facility << 3) + severity_value
       end
 
       # Generate a syslog compat message

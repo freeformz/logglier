@@ -14,7 +14,7 @@ module Logglier
     # @return [Logglier::Client::HTTP, Logglier::Client::Syslog] returns an instance of the Logglier Client class 
     def self.new(input_url, opts={})
       unless input_url
-        raise URLRequired.new
+        raise InputURLRequired.new
       end
 
       opts.merge!({ :input_url => input_url })
@@ -90,7 +90,7 @@ module Logglier
         begin
           @input_uri = URI.parse(@input_uri)
         rescue URI::InvalidURIError => e
-          raise URLRequired.new("Invalid Input URL: #{@input_uri}")
+          raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
         end
       end
 
