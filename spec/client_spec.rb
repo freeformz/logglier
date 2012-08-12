@@ -28,9 +28,8 @@ describe Logglier::Client do
       end
 
       context "that is a valid udp uri" do
-
         it "should return an instance of the proper client" do
-          log = Logglier::Client.new('udp://logs.loggly.com:42538')
+          log = Logglier::Client.new('udp://localhost:42538')
           log.should be_an_instance_of Logglier::Client::Syslog
         end
       end
