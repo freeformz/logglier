@@ -13,10 +13,15 @@ module Logglier
           start_thread
         end
 
-        # Pushes a message onto the internal queue
+        # Pushes a message to the delivery thread, starting one if necessary
         def deliver(message)
           start_thread unless @thread.alive?
           @thread.deliver(message)
+          #Race condition? Sometimes we need to rescue this and start a new thread
+        rescue NoMethodError
+          @thread.kill #Try not to leak threads, should already be dead anyway
+          start_thread
+          retry
         end
 
         private
