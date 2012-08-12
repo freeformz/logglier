@@ -35,6 +35,8 @@ module Logglier
           @headers = {}
           if @format == :json
             @headers['Content-Type'] = 'application/json'
+          else
+            @headers['Content-Type'] = 'text/plain'
           end
 
           connect!

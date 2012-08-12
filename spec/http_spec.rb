@@ -23,6 +23,11 @@ describe 'HTTP' do
     proxy.failsafe.should == $stderr
   end
 
+  it "defaults Content-Type header to text/plain" do
+    @http.should_receive(:request_post).with(anything(), anything(), hash_including('Content-Type' => 'text/plain'))
+    @proxy.deliver('message')
+  end
+
   describe "error handling" do
     Logglier::Client::HTTP::NetHTTPProxy::RETRY_EXCEPTIONS.each do |error|
       context "for #{error}" do
