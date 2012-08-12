@@ -14,7 +14,7 @@ module Logglier
         setup_input_uri(opts)
         @format = opts[:format] ? opts[:format].to_sym : nil
         @deliverer = if opts[:threaded]
-          Logglier::Client::HTTP::DeliveryThread.new(@input_uri, opts)
+          Logglier::Client::HTTP::DeliveryThreadManager.new(@input_uri, opts)
         else
           Logglier::Client::HTTP::NetHTTPProxy.new(@input_uri, opts)
         end
