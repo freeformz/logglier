@@ -50,6 +50,8 @@ describe Logglier::Client::HTTP::DeliveryThreadManager do
 
     @first_thread.kill
 
+    @first_thread.join
+
     subject.deliver('force respawn')
 
     @second_thread = subject.instance_variable_get(:@thread)
