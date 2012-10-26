@@ -6,7 +6,7 @@ describe Logglier::Client::HTTP::DeliveryThread do
     Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { @mock_http }
   end
 
-  subject { described_class.new(URI.parse('http://localhost')) }
+  subject { Logglier::Client::HTTP::DeliveryThread.new(URI.parse('http://localhost')) }
 
   it "should deliver the message" do
     @mock_http.should_receive(:deliver).with("test")
@@ -26,7 +26,7 @@ describe Logglier::Client::HTTP::DeliveryThreadManager do
     Logglier::Client::HTTP::NetHTTPProxy.stub(:new) { @mock_http }
   end
 
-  subject { described_class.new(URI.parse('http://localhost')) }
+  subject { Logglier::Client::HTTP::DeliveryThreadManager.new(URI.parse('http://localhost')) }
 
   it "should instantiate a delivery_thread" do
     Logglier::Client::HTTP::DeliveryThread.should_receive(:new).once
