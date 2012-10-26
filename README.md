@@ -12,12 +12,28 @@ In fact, it (currently) returns an instance of Logger.
 Usage
 -----
 
+## With Loggly
+
     require 'logglier'
 
     log = Logglier.new(<INPUT URL>)
 
     log.info("hello from logglier")
 
+
+## With Splunk Storm
+
+    require 'logglier'
+    
+    opts = {:pass => <SPLUNK STORM ACCESS TOKEN>,
+            :params => {:project => <SPLUNK STORM PROJECT>,
+                        :sourcetype => <SPLUNK STORM SOURCETYPE>,
+                        :host => <SPLUNK STORM HOST>}}
+    
+    log = Logglier.new('https://api.splunkstorm.com/1/inputs/http', opts)
+    
+    log.info("hello from logglier on splunk storm")
+    
 
 ### With Rails
 
