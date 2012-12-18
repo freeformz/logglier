@@ -1,6 +1,6 @@
 Overview
 --------
-[![Build Status](http://travis-ci.org/freeformz/logglier.png)](http://travis-ci.org/freeformz/logglier)
+[![Build Status](https://travis-ci.org/freeformz/logglier.png?branch=v0.2.0)](https://travis-ci.org/freeformz/logglier)
 
 Send logged messages to Loggly using either the HTTP API or Syslog/UDP.
 
