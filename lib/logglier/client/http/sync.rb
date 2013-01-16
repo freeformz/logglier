@@ -32,6 +32,8 @@ module Logglier
           @open_timeout = opts[:open_timeout] || 5
           @failsafe = opts[:failsafe] || $stderr
           @format = opts[:format] ? opts[:format].to_sym : nil
+          @auth_user = opts[:user] ? opts[:user] : 'x'
+          @auth_pass = opts[:pass] ? opts[:pass] : nil
           @headers = {}
           if @format == :json
             @headers['Content-Type'] = 'application/json'
@@ -49,7 +51,10 @@ module Logglier
           retries = 0
 
           begin
-            @http.request_post(@input_uri.path, message, @headers)
+            path = [@input_uri.path, @input_uri.query].join('?')
+            req = Net::HTTP::Post.new(path, @headers)
+            req.basic_auth(@auth_user, @auth_pass)
+            @http.request(req, message)
           rescue *RETRY_EXCEPTIONS => e
             if retries < RETRIES
               retries += 1

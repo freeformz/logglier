@@ -86,9 +86,12 @@ module Logglier
 
       def setup_input_uri(opts)
         @input_uri = opts[:input_url]
+        @params = if opts[:params]
+                    opts[:params].collect{|k,v| "#{k}=#{v}"}.join('&')
+                  end
 
         begin
-          @input_uri = URI.parse(@input_uri)
+          @input_uri = URI.parse([@input_uri, @params].join('?'))
         rescue URI::InvalidURIError => e
           raise InputURLRequired.new("Invalid Input URL: #{@input_uri}")
         end
