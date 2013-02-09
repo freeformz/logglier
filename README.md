@@ -67,6 +67,9 @@ Example:
     Logglier.new('https://logs.loggly.com/inputs/<id>',
                  :format => :json)
 
+Logglier uses [MultiJson](https://github.com/intridea/multi_json) to delegate the choice of JSON libraries to you, but I recommend using
+[Yajl](https://github.com/brianmario/yajl-ruby), just require the json gem of your choice before logglier.
+
 ### Syslog TCP/UDP Inputs
 
     Logglier.new('[udp|tcp]://<hostname>:<port>/<facility>')

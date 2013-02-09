@@ -1,3 +1,5 @@
+source :rubygems
+
 gemspec
 
 platforms :jruby do

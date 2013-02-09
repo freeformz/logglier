@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 
 module Logglier
   module Client
@@ -60,9 +60,9 @@ module Logglier
       def formatter
         proc do |severity, datetime, progname, msg|
           if @format == :json && msg.is_a?(Hash)
-            msg.merge!({ :severity => severity,
-                         :datetime => datetime,
-                         :progname => progname }).to_json
+            MultiJson.dump(msg.merge({ :severity => severity,
+                                       :datetime => datetime,
+                                       :progname => progname }))
           else
             message = "#{datetime} "
             message << massage_message(msg, severity)
