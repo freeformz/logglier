@@ -32,6 +32,10 @@ module Logglier
           @open_timeout = opts[:open_timeout] || 5
           @failsafe = opts[:failsafe] || $stderr
           @format = opts[:format] ? opts[:format].to_sym : nil
+          @proxy_addr = opts[:proxy_addr]
+          @proxy_port = opts[:proxy_port]
+          @proxy_user = opts[:proxy_user]
+          @proxy_password = opts[:proxy_password]
           @headers = {}
           if @format == :json
             @headers['Content-Type'] = 'application/json'
@@ -68,7 +72,8 @@ module Logglier
         private
 
         def connect!
-          @http = Net::HTTP.new(@input_uri.host, @input_uri.port)
+          @http_class = Net::HTTP::Proxy(@proxy_addr, @proxy_port, @proxy_user, @proxy_user)
+          @http = @http_class.new(@input_uri.host, @input_uri.port)
 
           if @input_uri.scheme == 'https'
             @http.use_ssl = true
