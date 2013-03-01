@@ -10,7 +10,7 @@ module Logglier
 
   def self.new(url, opts={})
     client = Logglier::Client.new(url, opts)
-    logger = Logger.new(client)
+    logger = ActiveSupport::Logger.new(client)
 
     if client.respond_to?(:formatter)
       logger.formatter = client.formatter

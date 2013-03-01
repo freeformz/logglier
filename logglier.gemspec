@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name              = 'logglier'
   s.version           = Logglier::VERSION
   s.date              = Time.now
-  s.summary           = 'Loggly "plugin" for Logger'
-  s.description       = 'Logger => Loggly'
+  s.summary           = 'Loggly "plugin" for ActiveSupport::Logger'
+  s.description       = 'ActiveSupport::Logger => Loggly'
 
   s.authors           = ["Edward Muller (aka freeformz)"]
   s.email             = 'edwardam@interlix.com'

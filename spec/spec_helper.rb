@@ -34,12 +34,12 @@ RSpec.configure do |config|
 
 end
 
-shared_examples_for "a logglier enhanced Logger instance" do
+shared_examples_for "a logglier enhanced ActiveSupport::Logger instance" do
   context "#add" do
     context "with a string" do
       it "should send a message via the logdev" do
         subject.logdev.dev.should_receive(:write).with(/severity=WARN, foo/)
-        subject.add(Logger::WARN) { 'foo' }
+        subject.add(ActiveSupport::Logger::WARN) { 'foo' }
       end
     end
 
@@ -50,9 +50,9 @@ shared_examples_for "a logglier enhanced Logger instance" do
         subject.logdev.dev.should_receive(:write).with(/man=pants/)
         # The following is equiv to:
         # subject.warn :foo => :bar, :man => :pants
-        subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
-        subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
-        subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+        subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
+        subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
+        subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
       end
     end
   end

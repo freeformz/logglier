@@ -10,30 +10,30 @@ describe Logglier do
     context "w/o any options" do
       subject { new_logglier('https://localhost') }
 
-      it { should be_an_instance_of Logger }
+      it { should be_an_instance_of ActiveSupport::Logger }
       its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP }
 
-      it_should_behave_like "a logglier enhanced Logger instance"
+      it_should_behave_like "a logglier enhanced ActiveSupport::Logger instance"
     end
 
     context "w/threaded option" do
       subject { new_logglier('https://localhost', :threaded => true) }
 
-      it { should be_an_instance_of Logger }
+      it { should be_an_instance_of ActiveSupport::Logger }
       its('logdev.dev') { should be_an_instance_of Logglier::Client::HTTP }
 
-      it_should_behave_like "a logglier enhanced Logger instance"
+      it_should_behave_like "a logglier enhanced ActiveSupport::Logger instance"
     end
 
     context "formatting" do
       subject { new_logglier('https://localhost', :format => :json) }
- 
-      it { should be_an_instance_of Logger }
+
+      it { should be_an_instance_of ActiveSupport::Logger }
 
       context "with a string" do
         it "should send a message via the logdev" do
           subject.logdev.dev.should_receive(:write).with(/severity=WARN, foo/)
-          subject.add(Logger::WARN) { 'foo' }
+          subject.add(ActiveSupport::Logger::WARN) { 'foo' }
         end
       end
 
@@ -44,9 +44,9 @@ describe Logglier do
           subject.logdev.dev.should_receive(:write).with(/"man":"pants"/)
           # The following is equiv to:
           # subject.warn :foo => :bar, :man => :pants
-          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
-          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
-          subject.add(Logger::WARN) { {:foo => :bar, :man => :pants} }
+          subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
+          subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
+          subject.add(ActiveSupport::Logger::WARN) { {:foo => :bar, :man => :pants} }
         end
       end
 
@@ -59,20 +59,20 @@ describe Logglier do
 
     subject { new_logglier('tcp://localhost:12345') }
 
-    it { should be_an_instance_of Logger }
+    it { should be_an_instance_of ActiveSupport::Logger }
     its('logdev.dev') { should be_an_instance_of Logglier::Client::Syslog }
 
-    it_should_behave_like "a logglier enhanced Logger instance"
+    it_should_behave_like "a logglier enhanced ActiveSupport::Logger instance"
 
   end
 
   context "Syslog UDP" do
     subject { new_logglier('udp://localhost:12345') }
 
-    it { should be_an_instance_of Logger }
+    it { should be_an_instance_of ActiveSupport::Logger }
     its('logdev.dev') { should be_an_instance_of Logglier::Client::Syslog }
 
-    it_should_behave_like "a logglier enhanced Logger instance"
+    it_should_behave_like "a logglier enhanced ActiveSupport::Logger instance"
 
   end
 end
