@@ -46,7 +46,7 @@ describe 'HTTP' do
             @failsafe.rewind
             lines = @failsafe.readlines
             lines.size.should == 4
-            lines[0..2].each {|l| l.should =~ /^WARNING/ }
+            lines[0..2].each {|l| l.should =~ /^RETRY/ }
             lines.last.should =~ /^ERROR/
           end
         end
@@ -67,7 +67,7 @@ describe 'HTTP' do
             @failsafe.rewind
             lines = @failsafe.readlines
             lines.size.should == 3
-            lines[0..2].each {|l| l.should =~ /^WARNING/ }
+            lines[0..2].each {|l| l.should =~ /^RETRY/ }
           end
         end
       end
