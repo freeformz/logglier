@@ -91,7 +91,7 @@ module Logglier
         end
 
         def failsafe_retrying(exception, message, retries)
-          @failsafe.puts "WARNING: [#{retries}/#{RETRIES}] " + failsafe_message(exception, message)
+          @failsafe.puts "RETRY: [#{retries} of #{RETRIES}] " + failsafe_message(exception, message)
         end
 
         def failsafe_errored(exception, message)
