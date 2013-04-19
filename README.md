@@ -113,6 +113,7 @@ Pull requests welcome
 TODO
 -----
 
+* Support ActiveSupport Notifications for newer rails
 * Alternative https implementations (Typheous, Excon, etc). May be
   faster?
 * EM Integration?
