@@ -12,9 +12,9 @@ Gem::Specification.new do |s|
   s.email             = 'edwardam@interlix.com'
   s.homepage          = 'http://github.com/freeformz/logglier'
 
-  s.files             = %w{ README.md Gemfile LICENSE logglier.gemspec Rakefile } + Dir["#{dir}/lib/**/*.rb"]
+  s.files             = %w{ README.md Gemfile LICENSE logglier.gemspec Rakefile } + Dir["lib/**/*.rb"]
   s.require_paths     = ['lib']
-  s.test_files        = Dir["#{dir}/spec/**/*.rb"]
+  s.test_files        = Dir["spec/**/*.rb"]
 
   s.rubyforge_project = 'logglier'
 
