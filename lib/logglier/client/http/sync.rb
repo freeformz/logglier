@@ -76,7 +76,7 @@ module Logglier
         private
 
         def connect!
-          @http_class = Net::HTTP::Proxy(@proxy_addr, @proxy_port, @proxy_user, @proxy_user)
+          @http_class = Net::HTTP::Proxy(@proxy_addr, @proxy_port, @proxy_user, @proxy_password)
           @http = @http_class.new(@input_uri.host, @input_uri.port)
 
           if @input_uri.scheme == 'https'
