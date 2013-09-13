@@ -42,8 +42,7 @@ module Logglier
           else
             @headers['Content-Type'] = 'text/plain'
           end
-
-          connect!
+          @http = nil
         end
 
         # Delivers the message via HTTP, handling errors
@@ -53,18 +52,23 @@ module Logglier
           retries = 0
 
           begin
+            if @http.nil?
+              connect!
+            end
+
             @http.request_post(@input_uri.path, message, @headers)
           rescue *RETRY_EXCEPTIONS => e
+            @http = nil
             if retries < RETRIES
               retries += 1
               failsafe_retrying(e, message, retries)
-              sleep retries
-              connect!
+              sleep(retries)
               retry
             else
               failsafe_errored(e, message)
             end
           rescue Exception => e
+            @http = nil
             failsafe_errored(e, message)
           end
         end
