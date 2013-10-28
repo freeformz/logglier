@@ -35,7 +35,7 @@ module Logglier
           @facility = 16
         end
 
-        @hostname = Socket.gethostname.split('.').first
+        @hostname = options[:hostname] || Socket.gethostname.split('.').first
       end
 
       # Required by Logger::LogDevice
