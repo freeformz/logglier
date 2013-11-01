@@ -25,17 +25,17 @@ module Logglier
         end
 
         unless @input_uri.path.empty?
-          @facility = @input_uri.path.split('/')[1]
-          if @facility and @facility.to_i <= 23 && @facility.to_i >= 0
+          if @facility = @input_uri.path.split('/')[1]
             @facility = @facility.to_i
-          else
-            raise Logglier::UnknownFacility.new(@facility.to_s)
+            unless @facility <= 23 && @facility >= 0
+              raise Logglier::UnknownFacility.new(@facility.to_s)
+            end
           end
         else
           @facility = 16
         end
 
-        @hostname = Socket.gethostname.split('.').first
+        @hostname = opts[:hostname] || Socket.gethostname.split('.').first
       end
 
       # Required by Logger::LogDevice
