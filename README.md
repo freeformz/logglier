@@ -28,6 +28,16 @@ config/environments/production.rb
     end
 
 
+### With Rails 4
+
+config/initializers/loggly.rb
+
+    loggly = Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]/tag/[your-rails-app]/', threaded: true, format: :json)
+    Rails.logger.extend(ActiveSupport::Logger.broadcast(loggly))
+
+^ Submitted by: https://github.com/cap10morgan
+
+
 Input URLs
 -------
 
