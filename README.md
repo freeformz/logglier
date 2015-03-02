@@ -32,7 +32,7 @@ config/environments/production.rb
 
 config/initializers/loggly.rb
 
-    loggly = Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]/tag/[your-rails-app]/', threaded: true, format: :json)
+    loggly = Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]/tag/rails', threaded: true, format: :json)
     Rails.logger.extend(ActiveSupport::Logger.broadcast(loggly))
 
 ^ Submitted by: https://github.com/cap10morgan
@@ -42,14 +42,14 @@ Input URLs
 -------
 
 ### HTTP Inputs
-    Logglier.new('https://logs-01.loggly.com/inputs/<id>')
+    Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]')
 
 The id is provided by loggly, look at the input's details page To make
 sure the http client doesn't block too long read_timeout and
 open_timeout are set to 2 seconds by default. This can be overridden
 like so:
 
-    Logglier.new('https://logs-01.loggly.com/inputs/<id>',
+    Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]',
                  :read_timeout => <#>,
                  :open_timeout => <#> )
 
@@ -63,7 +63,7 @@ log message delivery.
 
 Example:
 
-    Logglier.new('https://logs-01.loggly.com/inputs/<id>',
+    Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]',
                  :threaded => true)
 
 #### JSON Formatting
@@ -74,7 +74,7 @@ threaded delivery.
 
 Example:
 
-    Logglier.new('https://logs-01.loggly.com/inputs/<id>',
+    Logglier.new('https://logs-01.loggly.com/inputs/[your-customer-token]',
                  :format => :json)
 
 Logglier uses [MultiJson](https://github.com/intridea/multi_json) to delegate the choice of JSON libraries to you, but I recommend using
