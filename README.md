@@ -2,7 +2,7 @@ Overview
 --------
 [![Build Status](https://travis-ci.org/freeformz/logglier.png)](https://travis-ci.org/freeformz/logglier)
 
-Send logged messages to Loggly using either the HTTP API or Syslog/UDP.
+Send logged messages to Loggly using either the HTTP API or Syslog/UDP. Check out Loggly's [Ruby logging documentation](https://www.loggly.com/docs/ruby-logs/) to learn more.
 
 Can be used in place of Ruby's Logger
 (<http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/>)
