@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version     = '>= 1.8.6'
   s.required_rubygems_version = '>= 1.3.6'
 
-  s.add_dependency 'multi_json', '~> 0'
+  s.add_runtime_dependency 'multi_json', '~> 1'
   s.add_development_dependency 'rake', '~> 0'
   s.add_development_dependency 'rspec', '~> 2.11', '>= 2.11.0'
 end
