@@ -56,7 +56,7 @@ describe Logglier::Client do
       context "that is NOT a valid uri" do
 
         it "should raise an error" do
-          expect { Logglier::Client.new('f://://://') }.to raise_error Logglier::InputURLRequired
+          expect { Logglier::Client.new('f://://://') }.to raise_error
         end
 
       end
