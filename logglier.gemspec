@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary           = 'Loggly "plugin" for Logger'
   s.description       = 'Logger => Loggly'
 
-  s.license = "http://opensource.org/licenses/Apache-2.0"
+  s.license           = "http://opensource.org/licenses/MIT"
 
   s.authors           = ["Edward Muller (aka freeformz)"]
   s.email             = 'edwardam@interlix.com'
