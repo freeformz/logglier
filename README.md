@@ -112,6 +112,22 @@ Will produce the following log message in Loggly:
 Will produce the following log message in Loggly:
 
     "<Date> severity=WARN, boom=box, bar=soap"
+    
+### Logging Fast
+If speed is a concern, then you should pick a fast transport protocol. Here is their speed ranking from fastest to slowest:
+<ol>
+<li>Syslog UDP</li>
+<li>Syslog TCP</li>
+<li>Threaded HTTP</li>
+<li>Threaded HTTPS</li>
+<li>Blocking HTTP</li>
+<li>Blocking HTTPS</li>
+</ol>
+Syslog is the fastest because it's the most efficient protocol and the syslog daemon runs asynchronously with it's own queuing system (and optionally TLS encryption). 
+
+Threaded won't block your app but it can use up more memory and stack space. Blocking is the slowest because your app will wait for the data to be received by Loggly. 
+
+HTTPS is slower than HTTP because it requires an extra round trip to setup the secure connection.
 
 Bugs
 -----
