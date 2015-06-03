@@ -125,6 +125,8 @@ If speed is a concern, then you should pick a fast transport protocol. Here is t
 </ol>
 Syslog is the fastest because it's the most efficient protocol and the syslog daemon runs asynchronously with it's own queuing system (and optionally TLS encryption). 
 
+UDP uses a simple connectionless transmission model with a minimum of protocol mechanism. There is no guarantee of delivery, ordering, or duplicate protection.
+
 Threaded won't block your app but it can use up more memory and stack space. Blocking is the slowest because your app will wait for the data to be received by Loggly. 
 
 HTTPS is slower than HTTP because it requires an extra round trip to setup the secure connection.
