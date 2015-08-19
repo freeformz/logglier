@@ -72,7 +72,7 @@ module Logglier
         end
       end
 
-      def massage_message(incoming_message, severity)
+      def massage_message(incoming_message, severity, processid)
         outgoing_message = ""
         outgoing_message << "severity=#{severity}, pid=#{processid}, "
         case incoming_message
