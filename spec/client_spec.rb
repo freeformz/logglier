@@ -76,7 +76,7 @@ describe Logglier::Client do
     it "should mash out hashes" do
       message = subject.massage_message({:foo => :bar},"WARN", "1024")
       message.should =~ /^severity=WARN,/
-      message.should =~ /^pid=1024,/
+      message.should =~ /pid=1024,/
       message.should =~ /foo=bar/
     end
 
