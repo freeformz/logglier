@@ -79,13 +79,14 @@ module Logglier
       # See RFC3164 4.1.1 - 4.1.3
       def formatter
         proc do |severity, datetime, progname, msg|
+          processid=Process.pid
           message = "<#{pri(severity)}>#{datetime.strftime(datetime_format)} #{@hostname} "
           if progname
             message << "#{progname}: "
           else
             message << "#{$0}: "
           end
-          message << massage_message(msg,severity)
+          message << massage_message(msg,severity,processid)
           if @input_uri.scheme == 'tcp'
             message << "\r\n"
           end
