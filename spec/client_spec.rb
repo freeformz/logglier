@@ -75,32 +75,32 @@ describe Logglier::Client do
 
     it "should mash out hashes" do
       message = subject.massage_message({:foo => :bar},"WARN", "1024")
-      message.should =~ /^severity=WARN,/
-      message.should =~ /pid=1024,/
+      message.should =~ /^pid=1024,/
+      message.should =~ /severity=WARN,/
       message.should =~ /foo=bar/
     end
 
     it "should mash out nested hashes" do
-      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN", "1024")
-      message.should =~ /^severity=WARN,/
-      message.should =~ /pid=1024,/
+      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic } }, "WARN", "1025")
+      message.should =~ /^pid=1025,/
+      message.should =~ /severity=WARN,/
       message.should =~ /foo=bar/
       message.should =~ /bazzle\.bom=bastic/
     end
 
     it "should mash out deeply nested hashes" do
-      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN", "1024")
-      message.should =~ /^severity=WARN,/
-      message.should =~ /pid=1024,/
+      message = subject.massage_message({:foo => :bar, :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN", "1026")
+      message.should =~ /^pid=1026,/
+      message.should =~ /severity=WARN,/
       message.should =~ /foo=bar/
       message.should =~ /bazzle\.bom=bastic/
       message.should =~ /bazzle\.totally\.freaking=funny/
     end
 
     it "should mash out deeply nested hashes, with an array" do
-      message = subject.massage_message({:foo => :bar, :taste => ["this","sauce"], :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN", "1024")
-      message.should =~ /^severity=WARN,/
-      message.should =~ /pid=1024,/
+      message = subject.massage_message({:foo => :bar, :taste => ["this","sauce"], :bazzle => { :bom => :bastic, :totally => { :freaking => :funny } } }, "WARN", "1027")
+      message.should =~ /^pid=1027,/
+      message.should =~ /severity=WARN,/
       message.should =~ /foo=bar/
       message.should =~ /taste=\["this", "sauce"\]/
       message.should =~ /bazzle\.bom=bastic/
