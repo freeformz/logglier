@@ -74,7 +74,7 @@ module Logglier
 
       def massage_message(incoming_message, severity, processid)
         outgoing_message = ""
-        outgoing_message << "severity=#{severity}, pid=#{processid}, "
+        outgoing_message << "pid=#{processid}, severity=#{severity} , "
         case incoming_message
         when Hash
           outgoing_message << masher(incoming_message)

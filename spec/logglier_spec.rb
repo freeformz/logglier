@@ -32,7 +32,7 @@ describe Logglier do
 
       context "with a string" do
         it "should send a message via the logdev" do
-          subject.logdev.dev.should_receive(:write).with(/severity=WARN, pid=\d{4} foo/)
+          subject.logdev.dev.should_receive(:write).with(/severity=WARN, foo/)
           subject.add(Logger::WARN) { 'foo' }
         end
       end
