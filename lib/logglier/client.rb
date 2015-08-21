@@ -59,20 +59,22 @@ module Logglier
 
       def formatter
         proc do |severity, datetime, progname, msg|
+          processid=Process.pid
           if @format == :json && msg.is_a?(Hash)
             MultiJson.dump(msg.merge({ :severity => severity,
                                        :datetime => datetime,
-                                       :progname => progname }))
+                                       :progname => progname,
+                                       :pid      => processid }))
           else
             message = "#{datetime} "
-            message << massage_message(msg, severity)
+            message << massage_message(msg, severity, processid)
           end
         end
       end
 
-      def massage_message(incoming_message, severity)
+      def massage_message(incoming_message, severity, processid)
         outgoing_message = ""
-        outgoing_message << "severity=#{severity}, "
+        outgoing_message << "pid=#{processid}, severity=#{severity}, "
         case incoming_message
         when Hash
           outgoing_message << masher(incoming_message)
