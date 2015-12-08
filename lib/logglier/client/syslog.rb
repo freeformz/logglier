@@ -81,6 +81,8 @@ module Logglier
         proc do |severity, datetime, progname, msg|
           processid=Process.pid
           message = "<#{pri(severity)}>#{datetime.strftime(datetime_format)} #{@hostname} "
+
+          # Include process ID in progname/log tag - RFC3164 § 5.3
           if progname
             message << "#{progname}[#{processid}]: "
           else
