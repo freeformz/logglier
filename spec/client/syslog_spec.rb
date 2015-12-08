@@ -35,7 +35,7 @@ describe Logglier::Client::Syslog do
 
       it 'formats as a massaged message when the format is not JSON' do
         message = client.formatter.call 'INFO', Time.now, 'banana', testing_json: false
-        message.should match(/, testing_json=false\z/)
+        message.should match(/: testing_json=false\z/)
       end
     end
   end
