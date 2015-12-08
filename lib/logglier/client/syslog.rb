@@ -82,9 +82,9 @@ module Logglier
           processid=Process.pid
           message = "<#{pri(severity)}>#{datetime.strftime(datetime_format)} #{@hostname} "
           if progname
-            message << "#{progname}: "
+            message << "#{progname}[#{processid}]: "
           else
-            message << "#{$0}: "
+            message << "#{$0}[#{processid}]: "
           end
           message << massage_message(msg,severity,processid)
           if @input_uri.scheme == 'tcp'
