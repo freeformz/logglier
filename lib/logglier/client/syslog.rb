@@ -9,7 +9,7 @@ module Logglier
     class Syslog
       include Logglier::Client::InstanceMethods
 
-      attr_reader :input_uri, :facility, :syslog
+      attr_reader :input_uri, :facility, :format, :syslog
 
       def initialize(opts={})
         setup_input_uri(opts)
@@ -35,6 +35,7 @@ module Logglier
           @facility = 16
         end
 
+        @format = opts[:format]
         @hostname = opts[:hostname] || Socket.gethostname.split('.').first
       end
 
@@ -88,7 +89,14 @@ module Logglier
           else
             message << "#{$0}[#{processid}]: "
           end
-          message << massage_message(msg,severity,processid)
+
+          # Support logging JSON to Syslog
+          if @format == :json && msg.is_a?(Hash)
+            message << MultiJson.dump(msg)
+          else
+            message << massage_message(msg,severity,processid)
+          end
+
           if @input_uri.scheme == 'tcp'
             message << "\r\n"
           end
