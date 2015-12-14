@@ -74,7 +74,14 @@ module Logglier
 
       def massage_message(incoming_message, severity, processid)
         outgoing_message = ""
-        outgoing_message << "pid=#{processid}, severity=#{severity}, "
+
+        # Append PID and severity to message, unless we're a Syslog
+        # client. If we're a Syslog client, that information is already
+        # in the Syslog packet.
+        unless self.is_a?(Logglier::Client::Syslog)
+          outgoing_message << "pid=#{processid}, severity=#{severity}, "
+        end
+
         case incoming_message
         when Hash
           outgoing_message << masher(incoming_message)
