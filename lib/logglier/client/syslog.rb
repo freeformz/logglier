@@ -1,6 +1,7 @@
 require 'socket'
 require 'uri'
 require 'pp'
+require 'multi_json'
 
 module Logglier
 
