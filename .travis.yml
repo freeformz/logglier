@@ -1,5 +1,13 @@
+language: ruby
+sudo: false
+# https://github.com/bundler/bundler/issues/4157
+before_install:
+  - gem install bundler --version 1.10.6
+  - bundle version
+  - echo $PATH
+  - which bundle
 rvm:
-  - 2.2.2
-  - 2.1.6
-  - rbx-2.2.7
-  - jruby-1.7.20
+  - 2.2.3
+  - 2.1.7
+  - rbx-2.5.8
+  - jruby-9.0.4.0
