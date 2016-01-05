@@ -44,8 +44,8 @@ module Logglier
       def write(message)
         begin
           @syslog.send(message,0)
-        rescue TimeoutError => e
-          $stderr.puts "WARNING: TimeoutError posting message: #{message}"
+        rescue Timeout::Error => e
+          $stderr.puts "WARNING: Timeout::Error posting message: #{message}"
         end
       end
 

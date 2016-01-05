@@ -8,7 +8,7 @@ module Logglier
       class NetHTTPProxy
 
         RETRY_EXCEPTIONS = [
-          TimeoutError, OpenSSL::SSL::SSLError, Errno::EPIPE,
+          Timeout::Error, OpenSSL::SSL::SSLError, Errno::EPIPE,
           EOFError, Errno::ECONNRESET, Errno::ETIMEDOUT,
           Errno::ECONNREFUSED
         ]
