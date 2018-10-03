@@ -57,7 +57,7 @@ like so:
 
 Creating a new Logglier instance, pointed at a http input, with the
 `:threaded => true` option will tell Logglier to deliver log messages
-for that logger in a seperate thread. Each new Logglier instance gets
+for that logger in a separate thread. Each new Logglier instance gets
 it's own delivery thread and those threads are joined at exit to ensure
 log message delivery.
 
@@ -112,7 +112,7 @@ Will produce the following log message in Loggly:
 Will produce the following log message in Loggly:
 
     "<Date> severity=WARN, boom=box, bar=soap"
-    
+
 ### Logging Fast
 If speed is a concern, then you should pick a fast transport protocol. Here is their speed ranking from fastest to slowest:
 <ol>
@@ -123,13 +123,24 @@ If speed is a concern, then you should pick a fast transport protocol. Here is t
 <li>Blocking HTTP</li>
 <li>Blocking HTTPS</li>
 </ol>
-Syslog is the fastest because it's the most efficient protocol and the syslog daemon runs asynchronously with it's own queuing system (and optionally TLS encryption). 
+Syslog is the fastest because it's the most efficient protocol and the syslog daemon runs asynchronously with it's own queuing system (and optionally TLS encryption).
 
 UDP uses a simple connectionless transmission model with a minimum of protocol mechanism. There is no guarantee of delivery, ordering, or duplicate protection.
 
-Threaded won't block your app but it can use up more memory and stack space. Blocking is the slowest because your app will wait for the data to be received by Loggly. 
+Threaded won't block your app but it can use up more memory and stack space. Blocking is the slowest because your app will wait for the data to be received by Loggly.
 
 HTTPS is slower than HTTP because it requires an extra round trip to setup the secure connection.
+
+### Logging to an alternate log level (i.e.`INFO`)
+
+To change the default log level on a `Logglier` instance, you can use the
+`level=` along with Ruby's built in `Logger` constants:
+
+    logger = Logglier.new(...)
+    logger.level = Logger::INFO
+
+
+[Read more about Ruby's built in Logging levels](https://ruby-doc.org/stdlib-2.1.1/libdoc/logger/rdoc/Logger.html#class-Logger-label-Description)
 
 Bugs
 -----
