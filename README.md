@@ -1,3 +1,9 @@
+NOTE
+--------
+
+If you are interested in taking ownership of this please reach out to me.
+
+
 Overview
 --------
 [![Build Status](https://travis-ci.org/freeformz/logglier.png)](https://travis-ci.org/freeformz/logglier)
